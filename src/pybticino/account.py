@@ -596,7 +596,50 @@ class AsyncAccount:
                 "do_not_disturb": dnd_config,
             },
         )
+    
+    async def async_get_professional_studio_config(
+        self,
+        home_id: str,
+        module_id: str,
+    ) -> dict[str, Any] | None:
+        """Retrieve the professional-studio configuration for a module."""
+        result = await self.async_get_module_configs(
+            home_id=home_id,
+            module_ids=[module_id],
+        )
 
+        modules = (
+            result.get("body", {})
+            .get("home", {})
+            .get("modules", [])
+        )
+
+        for module in modules:
+            if module.get("id") == module_id:
+                professional_studio_config = module.get("professional_studio")
+                if isinstance(professional_studio_config, dict):
+                    return professional_studio_config
+                return None
+
+        return None
+
+    async def async_set_professional_studio_config(
+        self,
+        home_id: str,
+        module_id: str,
+        professional_studio_config: dict[str, Any],
+        module_type: str = "BNC3",
+    ) -> dict[str, Any]:
+        """Set the professional-studio configuration for a module."""
+        return await self.async_set_module_configs(
+            home_id=home_id,
+            module_id=module_id,
+            module_type=module_type,
+            configs={
+                "professional_studio": professional_studio_config,
+            },
+        )
+    
     async def async_get_events(self, home_id: str, size: int = 30) -> dict[str, Any]:
         """Retrieve the event history for a specific home.
 
