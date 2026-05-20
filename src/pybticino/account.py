@@ -40,6 +40,7 @@ DEFAULT_DEVICE_TYPES: list[str] = [
     "BPAC",
     "BPVC",
     "BNC1",
+    "BNC3",
     "BDIY",
     "BNHY",
     "NACamera",
